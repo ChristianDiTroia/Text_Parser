@@ -10,7 +10,7 @@ def parse_pdf_text(
         ):
     extracted_text = ""
     with pdfplumber.open(pdf_path) as pdf:
-        for page in pdf.pages[start_page:end_page]:
+        for page in pdf.pages[start_page-1:end_page]:
             width, height = page.width, page.height
             cropped_page = page.within_bbox((
                 0, 
@@ -22,7 +22,7 @@ def parse_pdf_text(
     return extracted_text
 
 def parse_by_sentence(text : str):
-    pattern = re.compile(r"(?<!\.)\.(?!\.)(\s|')")
+    pattern = re.compile(r"(?<!\.)\.(?:\s|’)")
     return re.split(pattern, text)
 
 def parse_by_line(text : str):
