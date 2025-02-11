@@ -43,6 +43,17 @@ def parse_by_line(text: str) -> list[str]:
     newline = re.compile(r"\n")
     return re.split(newline, text)
 
+# def parse_by_line(text : str):
+#     hyphen_newline_pattern = re.compile(r"(-\n\w*(\s|\.)\s)")
+#     line_pattern = re.compile(r"(?<!-)\n")
+#     # Concatenate words that span across lines to the same line
+#     for match in re.finditer(hyphen_newline_pattern, text):
+#         text = text[:match.end() - 1] + "\n" + text[match.end():] # Replace whitespace after each match with \n
+#         matched_str = match.group(0)
+#         print(matched_str)
+#         # text = text.replace(matched_str, matched_str.replace("\n", ""))
+#     return re.split(line_pattern, text)
+
 def main():
     parsed_gatsby = parse_by_sentence(parse_pdf_text('./the-great-gatsby.pdf'))
     for line in parsed_gatsby:
