@@ -1,55 +1,131 @@
+import pdfplumber, re, random
 from io import BytesIO
-import pdfplumber
-import re
 
-class pdf_parser():
+class text_manipulator():
 
     def __init__(self, pdf_path: str):
-        self.pdf = self.__read_pdf(pdf_path)
-        self.parsed_sentences = ''
-        self.parsed_lines = ''
+        self.pdf = self.read_pdf(pdf_path)
+        self.__lines = ''
+        self.__next_line = 0
+        self.__sentences = ''
+        self.__next_sentence = 0
 
-    def __read_pdf(pdf_path: str):
+    def parse_text(
+            self, 
+            start_page: int = 0,
+            end_page: int = None,
+            top_crop: int = 50,
+            bottom_crop: int = 75
+            ) -> tuple[list[str], list[str]]:
+        text = self.parse_pdf_text(
+            self.pdf,
+            start_page,
+            end_page,
+            top_crop,
+            bottom_crop
+        )
+        """Parse and store each sentence and line from the text"""
+        self.__lines = self.parse_lines(text)
+        self.__sentences = self.parse_sentences(text)
+        return (self.__lines, self.__sentences)
+
+    def get_next_line(self) -> str:
+        return self.get_next_lines(1)[0]
+    
+    def get_next_lines(self, num_lines: int) -> list[str]:
+        lines = self.get_lines(self.__next_line, self.__next_line + num_lines)
+        self.__next_line = self.__next_line + num_lines % self.num_lines()
+        return lines
+    
+    def get_lines(self, start: int = None, end: int = None) -> list[str]:
+        return self.__lines[start:end]
+    
+    def num_lines(self) -> int:
+        return len(self.__lines)
+    
+    def get_next_sentence(self) -> str:
+        return self.get_next_sentences(1)[0]
+    
+    def get_next_sentences(self, num_sentences: int) -> list[str]:
+        sentences = self.get_sentences(self.__next_sentence, self.__next_sentence + num_sentences)
+        self.__next_sentence = (self.__next_sentence + num_sentences) % self.num_sentences()
+        return sentences
+    
+    def get_sentences(self, start: int, end: int = None):
+        return self.__sentences[start:end]
+    
+    def num_sentences(self) -> int:
+        return len(self.__sentences)
+
+    def shuffle_lines(self, seed: int = None):
+        random.seed(seed)
+        random.shuffle(self.__lines)
+
+    def shuffle_sentences(self, seed: int = None):
+        random.seed(seed)
+        random.shuffle(self.__sentences)
+
+    ### static variables ###
+
+    #TODO patterns here
+
+    ### static methods ###
+
+    @staticmethod
+    def read_pdf(pdf_path: str) -> BytesIO:
         with open(pdf_path, 'rb') as file:
             bytes = file.read()
         return BytesIO(bytes) # read bytes into memory buffer and return the buffer
     
-    def __parse_pdf_text(
-            pdf_bytes: BytesIO,
-            start_page: int = 0,
-            end_page: int = None,
-            crop_top: int = 50,
-            crop_bottom: int = 75
-            ):
+    @staticmethod
+    def parse_pdf_text(
+            pdf: str | BytesIO,
+            start_page: int,
+            end_page: int,
+            top_crop: int,
+            bottom_crop: int
+            ) -> str:
+        """Returns all the text in a given pdf within the cropped bounds as a string"""
         extracted_text = ""
-        with pdfplumber.open(pdf_bytes) as pdf:
+        with pdfplumber.open(pdf) as pdf:
             for page in pdf.pages[start_page-1:end_page]:
                 width, height = page.width, page.height
                 cropped_page = page.within_bbox((
                     0, 
-                    crop_top, 
+                    top_crop, 
                     width, 
-                    height - crop_bottom
+                    height - bottom_crop
                 ))
                 extracted_text += cropped_page.extract_text() + "\n"
         return extracted_text
-
-    # Removes periods from common titles to prevent parsing as a sentence
-    def __protect_abbreviations(self, text: str) -> str:
-        common_titles = re.compile(r"Mrs(\.\s?)|Mr(\.\s?)|Ms(\.\s?)|Dr(\.\s?)|Jr(\.\s?)|Sr(\.\s?)")
-        return re.sub(common_titles, '\\1', text)
-
-    def parse_sentences(self, text: str) -> list[str]:
-        sentence_delimiters = re.compile(r"(?<!\.|[A-Z])[\.?!](?:\s|[\"'’”])")
-        text = self.__protect_abbreviations(text)
-        self.parsed_sentences = re.split(sentence_delimiters, text)
-
+    
     # Concatenates words that are hyphenated across line breaks
-    def __concat_hyphenated_words(self, text : str) -> str:
+    @staticmethod
+    def concat_hyphenated_words(text: str) -> str:
         hyphenated_word = re.compile(r"(-|–|—)\n(\w*)(\s|\.)?")
         return re.sub(hyphenated_word, r"\g<2>\n", text)
 
-    def parse_lines(self, text: str) -> list[str]:
-        text = self.__concat_hyphenated_words(text)
+    @staticmethod
+    def parse_lines(text: str) -> list[str]:
+        text = text_manipulator.concat_hyphenated_words(text)
         newline = re.compile(r"\n")
-        self.parsed_sentences = re.split(newline, text)
+        return re.split(newline, text)
+
+    @staticmethod
+    def parse_sentences(text: str) -> list[str]:
+        sentence_delimiters = re.compile(r"(?<!\.|[A-Z])[\.?!](?:\s|[\"'’”])")
+        text = text_manipulator.__protect_abbreviations(text)
+        return re.split(sentence_delimiters, text)
+    
+    ### Private methods ###
+
+    # Removes periods from common titles to prevent parsing as a sentence
+    @staticmethod
+    def __protect_abbreviations(text: str) -> str:
+        common_titles = re.compile(r"Mrs(\.\s?)|Mr(\.\s?)|Ms(\.\s?)|Dr(\.\s?)|Jr(\.\s?)|Sr(\.\s?)")
+        return re.sub(common_titles, '\\1', text)
+    
+    @staticmethod
+    def __restore_abbreviations(text: str) -> str:
+        #TODO add period back to protected abbreviations - use after parsing sentences.
+        pass
