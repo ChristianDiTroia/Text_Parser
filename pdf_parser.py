@@ -122,8 +122,8 @@ class text_manipulator():
     # Removes periods from common titles to prevent parsing as a sentence
     @staticmethod
     def __protect_abbreviations(text: str) -> str:
-        common_titles = re.compile(r"Mrs(\.\s?)|Mr(\.\s?)|Ms(\.\s?)|Dr(\.\s?)|Jr(\.\s?)|Sr(\.\s?)")
-        return re.sub(common_titles, '\\1', text)
+        common_titles = re.compile(r"(Mrs|Mr|Ms|Dr|Jr|Sr)(\.)")
+        return re.sub(common_titles, r"\g<1>", text)
     
     @staticmethod
     def __restore_abbreviations(text: str) -> str:
