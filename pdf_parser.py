@@ -129,3 +129,4 @@ class text_manipulator():
     def __restore_abbreviations(text: str) -> str:
         #TODO add period back to protected abbreviations - use after parsing sentences.
         pass
+    
