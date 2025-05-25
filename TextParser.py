@@ -23,7 +23,9 @@ class TextParser:
         )
         """Parse and store each sentence and line from the text"""
         self.__lines = self.parse_lines(text)
+        self.__next_line = 0
         self.__sentences = self.parse_sentences(text)
+        self.__next_sentence = 0
         return (self.__lines, self.__sentences)
 
     def get_next_line(self) -> str:
@@ -68,7 +70,12 @@ class TextParser:
 
     ### static variables ###
 
-    # TODO patterns here
+    # Regex patterns
+    __hyphenated_word = re.compile(r"(-|–|—)\n(\w*)(\W)?")
+    __newline = re.compile(r"\n")
+    __sentence_delimiters = re.compile(r"(?<!\.|[A-Z])[\.?!](?:\s|[\"'’”])")
+    __common_titles = re.compile(r"(Mrs|Mr|Ms|Dr|Jr|Sr)(\.)")
+    __common_titles_no_period = re.compile(r"(Mrs|Mr|Ms|Dr|Jr|Sr)(\s)")
 
     ### static methods ###
 
@@ -100,32 +107,28 @@ class TextParser:
     # Concatenates words that are hyphenated across line breaks
     @staticmethod
     def concat_hyphenated_words(text: str) -> str:
-        hyphenated_word = re.compile(r"(-|–|—)\n(\w*)(\s|\.)?")
-        return re.sub(hyphenated_word, r"\g<2>\n", text)
+        return re.sub(TextParser.__hyphenated_word, r"\g<2>\n", text)
 
     @staticmethod
     def parse_lines(text: str) -> list[str]:
         text = TextParser.concat_hyphenated_words(text)
-        newline = re.compile(r"\n")
-        return re.split(newline, text)
+        return re.split(TextParser.__newline, text)
 
     @staticmethod
     def parse_sentences(text: str) -> list[str]:
-        sentence_delimiters = re.compile(r"(?<!\.|[A-Z])[\.?!](?:\s|[\"'’”])")
         text = TextParser.__protect_abbreviations(text)
-        text = TextParser.__restore_abbreviations(text)
-        return re.split(sentence_delimiters, text)
+        sentences = re.split(TextParser.__sentence_delimiters, text)
+        map(lambda s: TextParser.__restore_abbreviations(s), sentences)
+        return sentences
 
     ### Private methods ###
 
     # Removes periods from common title abbreviations to prevent parsing as a sentence
     @staticmethod
     def __protect_abbreviations(text: str) -> str:
-        common_titles = re.compile(r"(Mrs|Mr|Ms|Dr|Jr|Sr)(\.)")
-        return re.sub(common_titles, r"\g<1>", text)
+        return re.sub(TextParser.__common_titles, r"\g<1>", text)
 
     # Adds periods to common title abbreviations that are missing them
     @staticmethod
     def __restore_abbreviations(text: str) -> str:
-        common_titles_no_period = re.compile(r"(Mrs|Mr|Ms|Dr|Jr|Sr)(\s)")
-        return re.sub(common_titles_no_period, r"\g<1>. ", text)
+        return re.sub(TextParser.__common_titles_no_period, r"\g<1>. ", text)
