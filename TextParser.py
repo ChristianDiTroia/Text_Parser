@@ -2,7 +2,7 @@ import pdfplumber, re, random
 from io import BytesIO
 
 
-class text_parser:
+class TextParser:
 
     def __init__(self, pdf_path: str):
         self.pdf = self.read_pdf(pdf_path)
@@ -105,15 +105,15 @@ class text_parser:
 
     @staticmethod
     def parse_lines(text: str) -> list[str]:
-        text = text_parser.concat_hyphenated_words(text)
+        text = TextParser.concat_hyphenated_words(text)
         newline = re.compile(r"\n")
         return re.split(newline, text)
 
     @staticmethod
     def parse_sentences(text: str) -> list[str]:
         sentence_delimiters = re.compile(r"(?<!\.|[A-Z])[\.?!](?:\s|[\"'’”])")
-        text = text_parser.__protect_abbreviations(text)
-        text = text_parser.__restore_abbreviations(text)
+        text = TextParser.__protect_abbreviations(text)
+        text = TextParser.__restore_abbreviations(text)
         return re.split(sentence_delimiters, text)
 
     ### Private methods ###
