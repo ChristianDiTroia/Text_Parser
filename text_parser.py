@@ -18,7 +18,7 @@ class text_parser:
         top_crop: int = 50,
         bottom_crop: int = 75,
     ) -> tuple[list[str], list[str]]:
-        text = self.parse_pdf_text(
+        text = self.extract_pdf_text(
             self.pdf, start_page, end_page, top_crop, bottom_crop
         )
         """Parse and store each sentence and line from the text"""
@@ -76,10 +76,10 @@ class text_parser:
     def read_pdf(pdf_path: str) -> BytesIO:
         with open(pdf_path, "rb") as file:
             bytes = file.read()
-        return BytesIO(bytes)  # read bytes into memory buffer and return the buffer
+        return BytesIO(bytes)
 
     @staticmethod
-    def parse_pdf_text(
+    def extract_pdf_text(
         pdf: str | BytesIO,
         start_page: int,
         end_page: int,
@@ -113,17 +113,19 @@ class text_parser:
     def parse_sentences(text: str) -> list[str]:
         sentence_delimiters = re.compile(r"(?<!\.|[A-Z])[\.?!](?:\s|[\"'’”])")
         text = text_parser.__protect_abbreviations(text)
+        text = text_parser.__restore_abbreviations(text)
         return re.split(sentence_delimiters, text)
 
     ### Private methods ###
 
-    # Removes periods from common titles to prevent parsing as a sentence
+    # Removes periods from common title abbreviations to prevent parsing as a sentence
     @staticmethod
     def __protect_abbreviations(text: str) -> str:
         common_titles = re.compile(r"(Mrs|Mr|Ms|Dr|Jr|Sr)(\.)")
         return re.sub(common_titles, r"\g<1>", text)
 
+    # Adds periods to common title abbreviations that are missing them
     @staticmethod
     def __restore_abbreviations(text: str) -> str:
-        # TODO add period back to protected abbreviations - use after parsing sentences.
-        pass
+        common_titles_no_period = re.compile(r"(Mrs|Mr|Ms|Dr|Jr|Sr)(\s)")
+        return re.sub(common_titles_no_period, r"\g<1>. ", text)
