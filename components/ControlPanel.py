@@ -1,3 +1,6 @@
+import tkinter as tk
+
+from TextParser import TextParser
 from components.SeedCheckbox import SeedCheckbox
 from components.SeedEntry import SeedEntry
 from components.TokenTypeMenu import TokenTypeMenu
@@ -11,7 +14,7 @@ from components.TokenNumberComboBox import TokenNumberComboBox
 
 class ControlPanel(CommonFrame):
 
-    def __init__(self, master):
+    def __init__(self, master, text_parser: TextParser, text_var: tk.StringVar):
         super().__init__(master, corner_radius=16)
 
         # Configure frame layout
@@ -21,7 +24,9 @@ class ControlPanel(CommonFrame):
         self.grid_rowconfigure((6), weight=1)
 
         # Upload button
-        self.upload_button = UploadButton(self)
+        self.upload_button = UploadButton(
+            self, text_parser=text_parser, text_var=text_var
+        )
         self.upload_button.grid(
             row=0, column=0, padx=40, pady=(40, 0), sticky="new", columnspan=2
         )
