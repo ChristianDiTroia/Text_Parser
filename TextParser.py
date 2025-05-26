@@ -73,7 +73,7 @@ class TextParser:
     # Regex patterns
     __hyphenated_word = re.compile(r"(-|–|—)\n(\w*)(\W)?")
     __newline = re.compile(r"\n")
-    __sentence_delimiters = re.compile(r"(?<!\.|[A-Z])[\.?!](?:\s|[\"'’”])")
+    __sentence_delimiters = re.compile(r"(?<![\.A-Z])([\.?!][\s\"'’”])")
     __common_titles = re.compile(r"(Mrs|Mr|Ms|Dr|Jr|Sr)(\.)")
     __common_titles_no_period = re.compile(r"(Mrs|Mr|Ms|Dr|Jr|Sr)(\s)")
 
@@ -117,7 +117,16 @@ class TextParser:
     @staticmethod
     def parse_sentences(text: str) -> list[str]:
         text = TextParser.__protect_abbreviations(text)
-        sentences = re.split(TextParser.__sentence_delimiters, text)
+        split_sentences = re.split(
+            TextParser.__sentence_delimiters, text
+        )  # returns [sentence, delimiter, sentence, delimiter, ...]
+        sentences = []
+        # Append each delimiter to reform the original sentences
+        for i in range(len(split_sentences) - 1):
+            if i % 2 == 0:  # Sentences are at even indices, delimiters at odd
+                sentences.append(split_sentences[i] + split_sentences[i + 1].strip())
+            elif i == len(split_sentences) - 1:
+                sentences.append(split_sentences[i])
         map(lambda s: TextParser.__restore_abbreviations(s), sentences)
         return sentences
 
