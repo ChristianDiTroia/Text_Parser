@@ -10,9 +10,7 @@ class RandomizeButton(CommonButton):
         self.configure(command=self._randomize)
 
     def _randomize(self):
-        text_parser = AppContext.text_parser
-        text_var = tk.StringVar(name="text_var")
-        print(text_var.get())
-
+        text_parser = AppContext.var("text_parser").get_value()
+        text_var = AppContext.var("text_var")
         text_parser.shuffle_lines()
-        text_var.set("\n".join(text_parser.get_next_lines(10)))
+        text_var.set_value("\n".join(text_parser.get_next_lines(10)))

@@ -19,10 +19,11 @@ class UploadButton(CommonButton):
             try:
                 text_parser = TextParser(file_path)
                 text_parser.parse_text(start_page=3, end_page=10)
-                AppContext.text_parser = text_parser
+                AppContext.var("text_parser", text_parser)
 
-                text_var = tk.StringVar(name="text_var")
-                text_var.set("\n".join(text_parser.get_next_lines(10)))
+                AppContext.var("text_var").set_value(
+                    "\n".join(text_parser.get_next_lines(10))
+                )
                 # TODO create new window to show text read loading
                 # possibly need to do this in another thread
                 # alsooo definitely do not set the text here

@@ -2,6 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from PIL import Image
 
+from AppContext import AppContext
 from components.common.CommonFrame import CommonFrame
 from components.common.CommonTextbox import CommonTextbox
 
@@ -11,9 +12,9 @@ class WorkspaceFrame(CommonFrame):
     def __init__(self, master):
         super().__init__(master)
 
-        # Get state management variables
-        self.text_var = tk.StringVar(name="text_var")
-        self.text_var.trace_add("write", self.update_text)
+        # State management
+        text_var = AppContext.var("text_var")
+        text_var.add_callback(self.update_text)
 
         # Configure frame layout
         self.grid_columnconfigure((0, 2), weight=5)
@@ -37,7 +38,6 @@ class WorkspaceFrame(CommonFrame):
         self.result_text = CommonTextbox(self, width=500)
         self.result_text.grid(row=0, column=2, padx=(0, 40), pady=40, sticky="nsew")
 
-    def update_text(self, var, index, mode):
+    def update_text(self, value):
         self.document_text.delete("1.0", "end")
-        self.document_text.insert("1.0", self.text_var.get())
-        print("update text!")
+        self.document_text.insert("1.0", value)

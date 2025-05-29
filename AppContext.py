@@ -1,41 +1,42 @@
+from typing import Callable
+
+
 class AppContext:
 
     class _StateVariable:
 
         def __init__(
             self,
-            name: str,
             initial_value: any = None,
-            callbacks: callable[[], None] | list[callable[[], None]] = [],
+            callbacks: Callable[[any], None] | list[Callable[[any], None]] = [],
         ):
             self._value = initial_value
             self._callbacks = callbacks if isinstance(callbacks, list) else [callbacks]
-            AppContext._variables[name] = self
 
         def set_value(self, value: any):
             self._value = value
             for callback in self._callbacks:
-                callback()
+                callback(self._value)
 
         def get_value(self) -> any:
             return self._value
 
-        def add_callback(self, callback: callable[[], None]):
+        def add_callback(self, callback: Callable[[any], None]):
             self._callbacks.append(callback)
 
     _variables: dict[str, _StateVariable] = {}
 
     @staticmethod
-    def assign_var(
+    def var(
         name: str,
         initial_value: any = None,
-        callback: callable[[], None] = lambda: None,
+        callbacks: Callable[[any], None] | list[Callable[[any], None]] = [],
     ):
-        return AppContext._StateVariable(name, initial_value, callback)
-
-    @staticmethod
-    def get_var(var_name):
-        return AppContext._variables.get(var_name, None)
+        if name in AppContext._variables:
+            return AppContext._variables[name]
+        new_var = AppContext._StateVariable(initial_value, callbacks)
+        AppContext._variables[name] = new_var
+        return new_var
 
     @staticmethod
     def get_var_keys():
