@@ -3,7 +3,7 @@ from typing import Callable
 
 class AppContext:
 
-    class _StateVariable:
+    class StateVariable:
 
         def __init__(
             self,
@@ -24,20 +24,20 @@ class AppContext:
         def add_callback(self, callback: Callable[[any], None]):
             self._callbacks.append(callback)
 
-    _variables: dict[str, _StateVariable] = {}
+    _variables: dict[str, StateVariable] = {}
 
     @staticmethod
     def var(
         name: str,
         initial_value: any = None,
         callbacks: Callable[[any], None] | list[Callable[[any], None]] = [],
-    ):
+    ) -> StateVariable:
         if name in AppContext._variables:
             return AppContext._variables[name]
-        new_var = AppContext._StateVariable(initial_value, callbacks)
+        new_var = AppContext.StateVariable(initial_value, callbacks)
         AppContext._variables[name] = new_var
         return new_var
 
     @staticmethod
-    def get_var_keys():
+    def get_var_keys() -> list[str]:
         return AppContext._variables.keys()

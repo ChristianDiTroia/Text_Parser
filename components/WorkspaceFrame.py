@@ -1,7 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
 from PIL import Image
-
 from AppContext import AppContext
 from components.common.CommonFrame import CommonFrame
 from components.common.CommonTextbox import CommonTextbox

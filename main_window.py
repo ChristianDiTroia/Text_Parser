@@ -1,6 +1,5 @@
 import customtkinter as ctk
 import tkinter as tk
-
 from components.ControlPanel import ControlPanel
 from components.WorkspaceFrame import WorkspaceFrame
 

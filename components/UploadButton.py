@@ -1,6 +1,5 @@
 import customtkinter as ctk
 import tkinter as tk
-
 from AppContext import AppContext
 from TextParser import TextParser
 from components.common.CommonButton import CommonButton
