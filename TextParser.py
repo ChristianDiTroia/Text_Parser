@@ -33,7 +33,7 @@ class TextParser:
 
     def get_next_lines(self, num_lines: int) -> list[str]:
         lines = self.get_lines(self.__next_line, self.__next_line + num_lines)
-        self.__next_line = self.__next_line + num_lines % self.num_lines()
+        self.__next_line = (self.__next_line + num_lines) % self.num_lines()
         return lines
 
     def get_lines(self, start: int = None, end: int = None) -> list[str]:
