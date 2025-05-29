@@ -40,11 +40,3 @@ class AppContext:
     @staticmethod
     def get_var_keys():
         return AppContext._variables.keys()
-
-
-# TODO:
-# Make custom app context that manages state variables
-#   - make each variable except a callback function that is executed when variable state changes
-#   - each variable should be accessed indirectly so that we can track state change
-#   - App context will have a static method to get each variable based on name such as get_var()
-#   - everytime an instance is made with the constructor, it will register the variable in a dict
