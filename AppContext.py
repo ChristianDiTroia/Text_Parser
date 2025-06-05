@@ -29,7 +29,7 @@ class AppContext:
     @staticmethod
     def var(
         name: str,
-        initial_value: any = None,
+        initial_value: any = object(),
         callbacks: Callable[[any], None] | list[Callable[[any], None]] = [],
     ) -> StateVariable:
         if name in AppContext._variables:

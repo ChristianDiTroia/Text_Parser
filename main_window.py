@@ -1,5 +1,5 @@
 import customtkinter as ctk
-import tkinter as tk
+from AppContext import AppContext
 from components.ControlPanel import ControlPanel
 from components.WorkspaceFrame import WorkspaceFrame
 
@@ -7,9 +7,6 @@ from components.WorkspaceFrame import WorkspaceFrame
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
-
-        # Initialize app state
-        self.text_var: tk.StringVar = tk.StringVar(master=self, name="text_var")
 
         # Take focus of any widget when clicked
         self.bind_all("<Button-1>", lambda event: event.widget.focus_set())
@@ -27,10 +24,6 @@ class App(ctk.CTk):
         # Control Panel
         self.control_panel = ControlPanel(self)
         self.control_panel.grid(row=0, column=0, padx=(40, 20), pady=40, sticky="nsew")
-
-        # # Workspace
-        # self.workspace = WorkspaceFrame(self)
-        # self.workspace.grid(row=0, column=1, padx=(20, 40), pady=40, sticky="nsew")
 
 
 if __name__ == "__main__":

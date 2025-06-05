@@ -18,7 +18,7 @@ class UploadButton(CommonButton):
             try:
                 text_parser = TextParser(file_path)
                 text_parser.parse_text(start_page=3, end_page=10)
-                AppContext.var("text_parser", text_parser)
+                AppContext.var("text_parser").set_value(text_parser)
 
                 AppContext.var("text_var").set_value(
                     "\n".join(text_parser.get_next_lines(10))
