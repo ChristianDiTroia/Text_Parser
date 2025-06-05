@@ -1,5 +1,8 @@
 import pdfplumber, re, random
 from io import BytesIO
+import concurrent.futures as cf
+import math
+import os
 
 
 class TextParser:
@@ -18,10 +21,33 @@ class TextParser:
         top_crop: int = 50,
         bottom_crop: int = 75,
     ) -> tuple[list[str], list[str]]:
-        text = self.extract_pdf_text(
-            self.pdf, start_page, end_page, top_crop, bottom_crop
-        )
         """Parse and store each sentence and line from the text"""
+
+        if not end_page:
+            with pdfplumber.open(self.pdf) as pdf:
+                end_page = len(pdf.pages)
+
+        workers = os.cpu_count() or 4
+        pages = math.ceil((end_page - start_page) / workers)
+        futures = []
+        with cf.ProcessPoolExecutor(max_workers=workers) as executor:
+            for i in range(workers):
+                start = start_page + i * pages
+                end = min(start + pages, end_page)
+                futures.append(
+                    executor.submit(
+                        self.extract_pdf_text,
+                        self.pdf,
+                        start,
+                        end,
+                        top_crop,
+                        bottom_crop,
+                    )
+                )
+        text = ""
+        for future in cf.as_completed(futures):
+            text += future.result()
+
         self.__lines = self.parse_lines(text)
         self.__next_line = 0
         self.__sentences = self.parse_sentences(text)
@@ -93,7 +119,6 @@ class TextParser:
         top_crop: int,
         bottom_crop: int,
     ) -> str:
-        """Returns all the text in a given pdf within the cropped bounds as a string"""
         extracted_text = ""
         with pdfplumber.open(pdf) as pdf:
             for page in pdf.pages[start_page - 1 : end_page]:

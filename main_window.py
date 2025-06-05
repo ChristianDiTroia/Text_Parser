@@ -1,5 +1,4 @@
 import customtkinter as ctk
-from AppContext import AppContext
 from components.ControlPanel import ControlPanel
 from components.WorkspaceFrame import WorkspaceFrame
 

@@ -14,17 +14,18 @@ class UploadButton(CommonButton):
             title="Select a file",
             filetypes=(("All files", ("*.txt", "*.docx", "*.pdf")),),
         )
+        # TODO popup another window here asking for start page and end page,
+        # also displaying the PDF preview
         if file_path:
             try:
                 text_parser = TextParser(file_path)
-                text_parser.parse_text(start_page=3, end_page=10)
+                text_parser.parse_text(start_page=3)
                 AppContext.var("text_parser").set_value(text_parser)
 
                 AppContext.var("text_var").set_value(
                     "\n".join(text_parser.get_next_lines(10))
                 )
                 # TODO create new window to show text read loading
-                # possibly need to do this in another thread
                 # alsooo definitely do not set the text here
-            except IOError as e:
+            except Exception as e:
                 tk.messagebox.showerror("Error", f"Failed to read the file: {e}")
