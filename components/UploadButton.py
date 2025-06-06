@@ -1,3 +1,4 @@
+import threading
 import customtkinter as ctk
 import tkinter as tk
 from AppContext import AppContext
@@ -14,18 +15,22 @@ class UploadButton(CommonButton):
             title="Select a file",
             filetypes=(("All files", ("*.txt", "*.docx", "*.pdf")),),
         )
-        # TODO popup another window here asking for start page and end page,
-        # also displaying the PDF preview
         if file_path:
-            try:
-                text_parser = TextParser(file_path)
-                text_parser.parse_text(start_page=3)
-                AppContext.var("text_parser").set_value(text_parser)
+            text_parser = TextParser(file_path)
+            AppContext.var("text_parser").set_value(text_parser)
+            async_parse_text(text_parser, start_page=3)
 
-                AppContext.var("text_var").set_value(
-                    "\n".join(text_parser.get_next_lines(10))
-                )
-                # TODO create new window to show text read loading
-                # alsooo definitely do not set the text here
-            except Exception as e:
-                tk.messagebox.showerror("Error", f"Failed to read the file: {e}")
+        # TODO popup another window here asking for start page and end page,
+        # maybe display progress bar and the PDF preview
+
+
+def async_parse_text(text_parser, start_page=None, end_page=None):
+    def job():
+        try:
+            text_parser.parse_text(start_page, end_page)
+        except Exception as e:
+            AppContext.var("text_parser").set_value(None)
+            tk.messagebox.showwarning("Error", f"Unable to read the selected file")
+
+    thread = threading.Thread(target=job, daemon=True)
+    thread.start()

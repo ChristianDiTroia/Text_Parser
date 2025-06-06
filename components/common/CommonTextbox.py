@@ -41,5 +41,6 @@ class CommonTextbox(ctk.CTkTextbox):
             activate_scrollbars=activate_scrollbars,
             undo=undo,
             autoseparators=autoseparators,
+            wrap="none",
             **kwargs
         )

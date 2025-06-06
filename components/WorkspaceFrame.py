@@ -22,7 +22,7 @@ class WorkspaceFrame(CommonFrame):
 
         # Left text box
         self.document_text = CommonTextbox(self, width=500)
-        self.document_text.grid(row=0, column=0, padx=(40, 0), pady=40, sticky="nsew")
+        self.document_text.grid(row=0, column=0, padx=(20, 0), pady=20, sticky="nsew")
 
         # Arrow image
         self.right_arrow = ctk.CTkImage(
@@ -35,7 +35,7 @@ class WorkspaceFrame(CommonFrame):
 
         # Right text box
         self.result_text = CommonTextbox(self, width=500)
-        self.result_text.grid(row=0, column=2, padx=(0, 40), pady=40, sticky="nsew")
+        self.result_text.grid(row=0, column=2, padx=(0, 20), pady=20, sticky="nsew")
 
     def update_text(self, value):
         self.document_text.delete("1.0", "end")
