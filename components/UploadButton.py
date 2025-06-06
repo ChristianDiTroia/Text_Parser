@@ -16,7 +16,12 @@ class UploadButton(CommonButton):
             filetypes=(("All files", ("*.txt", "*.docx", "*.pdf")),),
         )
         if file_path:
-            text_parser = TextParser(file_path)
+            try:
+                text_parser = TextParser(file_path)
+            except (ValueError, FileNotFoundError, IOError) as e:
+                tk.messagebox.showwarning("Cannot read file", str(e))
+                return
+
             AppContext.var("text_parser").set_value(text_parser)
             async_parse_text(text_parser, start_page=3)
 
@@ -28,9 +33,9 @@ def async_parse_text(text_parser, start_page=None, end_page=None):
     def job():
         try:
             text_parser.parse_text(start_page, end_page)
-        except Exception as e:
+        except Exception:
             AppContext.var("text_parser").set_value(None)
-            tk.messagebox.showwarning("Error", f"Unable to read the selected file")
+            tk.messagebox.showwarning("Error", f"Unable to parse the selected file")
 
     thread = threading.Thread(target=job, daemon=True)
     thread.start()

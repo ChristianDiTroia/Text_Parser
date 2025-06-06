@@ -7,11 +7,19 @@ import os
 
 class TextParser:
 
-    def __init__(self, pdf_path: str):
-        self.pdf = self.read_pdf(pdf_path)
-        self.__lines = ""
+    def __init__(self, file_path: str):
+        file_extension = re.split(r"\.", file_path)[-1].lower()
+        if file_extension not in self.__ACCEPTED_FILE_TYPES:
+            raise ValueError(
+                f"Unsupported file type: {file_extension}.\n"
+                f"Accepted types are: {self.__ACCEPTED_FILE_TYPES}"
+            )
+
+        self.__file_type = file_extension
+        self.__text_bytes = self.read_file(file_path)
+        self.__lines = []
         self.__next_line = 0
-        self.__sentences = ""
+        self.__sentences = []
         self.__next_sentence = 0
 
     def parse_text(
@@ -24,22 +32,22 @@ class TextParser:
         """Parse and store each sentence and line from the text"""
 
         if not end_page:
-            with pdfplumber.open(self.pdf) as pdf:
+            with pdfplumber.open(self.__text_bytes) as pdf:
                 end_page = len(pdf.pages)
 
         workers = os.cpu_count() or 4
-        pages = math.ceil((end_page - start_page) / workers)
+        pages_per_worker = math.ceil((end_page - start_page) / workers)
         futures = []
         with cf.ProcessPoolExecutor(max_workers=workers) as executor:
             for i in range(workers):
-                start = start_page + i * pages
-                end = min(start + pages, end_page)
+                worker_start = start_page + (pages_per_worker * i)
+                worker_end = min(worker_start + pages_per_worker, end_page)
                 futures.append(
                     executor.submit(
                         self.extract_pdf_text,
-                        self.pdf,
-                        start,
-                        end,
+                        self.__text_bytes,
+                        worker_start,
+                        worker_end,
                         top_crop,
                         bottom_crop,
                     )
@@ -96,6 +104,9 @@ class TextParser:
 
     ### static variables ###
 
+    # File types
+    __ACCEPTED_FILE_TYPES = ("pdf", "docx", "txt")
+
     # Regex patterns
     __hyphenated_word = re.compile(r"(-|–|—)\n(\w*)(\W)?")
     __newline = re.compile(r"\n")
@@ -106,7 +117,7 @@ class TextParser:
     ### static methods ###
 
     @staticmethod
-    def read_pdf(pdf_path: str) -> BytesIO:
+    def read_file(pdf_path: str) -> BytesIO:
         with open(pdf_path, "rb") as file:
             bytes = file.read()
         return BytesIO(bytes)
@@ -141,7 +152,7 @@ class TextParser:
 
     @staticmethod
     def parse_sentences(text: str) -> list[str]:
-        text = TextParser.__protect_abbreviations(text)
+        text = TextParser._protect_abbreviations(text)
         split_sentences = re.split(
             TextParser.__sentence_delimiters, text
         )  # returns [sentence, delimiter, sentence, delimiter, ...]
@@ -152,17 +163,17 @@ class TextParser:
                 sentences.append(split_sentences[i] + split_sentences[i + 1].strip())
             elif i == len(split_sentences) - 1:
                 sentences.append(split_sentences[i])
-        map(lambda s: TextParser.__restore_abbreviations(s), sentences)
+        map(lambda s: TextParser._restore_abbreviations(s), sentences)
         return sentences
 
     ### Private methods ###
 
     # Removes periods from common title abbreviations to prevent parsing as a sentence
     @staticmethod
-    def __protect_abbreviations(text: str) -> str:
+    def _protect_abbreviations(text: str) -> str:
         return re.sub(TextParser.__common_titles, r"\g<1>", text)
 
     # Adds periods to common title abbreviations that are missing them
     @staticmethod
-    def __restore_abbreviations(text: str) -> str:
+    def _restore_abbreviations(text: str) -> str:
         return re.sub(TextParser.__common_titles_no_period, r"\g<1>. ", text)
