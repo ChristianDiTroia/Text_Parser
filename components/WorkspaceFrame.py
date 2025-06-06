@@ -12,8 +12,7 @@ class WorkspaceFrame(CommonFrame):
         super().__init__(master)
 
         # State management
-        text_var = AppContext.var("text_var")
-        text_var.add_callback(self.update_text)
+        AppContext.var("text_var").add_callback(self.update_text)
 
         # Configure frame layout
         self.grid_columnconfigure((0, 2), weight=5)

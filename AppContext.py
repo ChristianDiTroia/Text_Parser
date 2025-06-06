@@ -8,9 +8,11 @@ class AppContext:
         def __init__(
             self,
             initial_value: any = None,
-            callbacks: Callable[[any], None] | list[Callable[[any], None]] = [],
+            callbacks: Callable[[any], None] | list[Callable[[any], None]] = None,
         ):
             self._value = initial_value
+            if callbacks is None:
+                callbacks = []
             self._callbacks = callbacks if isinstance(callbacks, list) else [callbacks]
 
         def set_value(self, value: any):
@@ -30,7 +32,7 @@ class AppContext:
     def var(
         name: str,
         initial_value: any = None,
-        callbacks: Callable[[any], None] | list[Callable[[any], None]] = [],
+        callbacks: Callable[[any], None] | list[Callable[[any], None]] = None,
     ) -> StateVariable:
         if name in AppContext._variables:
             return AppContext._variables[name]
