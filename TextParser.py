@@ -60,7 +60,6 @@ class TextParser:
         self.__next_line = 0
         self.__sentences = self.parse_sentences(text)
         self.__next_sentence = 0
-        return (self.__lines, self.__sentences)
 
     def get_next_line(self) -> str:
         return self.get_next_lines(1)[0]

@@ -1,4 +1,6 @@
 import customtkinter as ctk
+import threading
+import time
 from AppContext import AppContext
 from components.ControlPanel import ControlPanel
 from components.WorkspaceFrame import WorkspaceFrame
@@ -7,6 +9,7 @@ from components.WorkspaceFrame import WorkspaceFrame
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
+        auto_save_daemon(self)
 
         # State management
         AppContext.var("root").set_value(self)
@@ -27,6 +30,18 @@ class App(ctk.CTk):
         # Control Panel
         self.control_panel = ControlPanel(self)
         self.control_panel.grid(row=0, column=0, padx=(40, 20), pady=40, sticky="nsew")
+
+
+def auto_save_daemon(root: App):
+    def job():
+        while root.winfo_exists():
+            save_file = AppContext.var("save_file").get_value()
+            if save_file:
+                with open(save_file, "w") as file:
+                    file.write(AppContext.var("result_var").get_value())
+            time.sleep(1)  # auto save every second while the app is alive
+
+    threading.Thread(name="auto_save_daemon", target=job, daemon=True).start()
 
 
 if __name__ == "__main__":

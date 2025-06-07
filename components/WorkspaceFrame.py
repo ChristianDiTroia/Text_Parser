@@ -12,7 +12,7 @@ class WorkspaceFrame(CommonFrame):
         super().__init__(master)
 
         # State management
-        AppContext.var("text_var").add_callback(self.update_text)
+        AppContext.var("text_var").add_callback(self.__update_text)
 
         # Configure frame layout
         self.grid_columnconfigure((0, 2), weight=5)
@@ -35,7 +35,13 @@ class WorkspaceFrame(CommonFrame):
         # Right text box
         self.result_text = CommonTextbox(self, width=500)
         self.result_text.grid(row=0, column=2, padx=(0, 20), pady=20, sticky="nsew")
+        self.result_text.bind("<KeyRelease>", command=self.__save_result)
 
-    def update_text(self, value):
+    def __update_text(self, value):
         self.document_text.delete("1.0", "end")
         self.document_text.insert("1.0", value)
+
+    def __save_result(self, event):
+        if self.result_text.edit_modified():
+            AppContext.var("result_var").set_value(self.result_text.get(1.0, tk.END))
+            self.result_text.edit_modified(False)

@@ -14,7 +14,12 @@ class UploadButton(CommonButton):
     def _upload_dialogue(self):
         file_path = ctk.filedialog.askopenfilename(
             title="Select a file",
-            filetypes=(("All files", ("*.txt", "*.docx", "*.pdf")),),
+            filetypes=(
+                ("All files", "*.*"),
+                ("Text File", "*.txt"),
+                ("Word Documents", "*.docx"),
+                ("PDF File", "*.pdf"),
+            ),
         )
         if file_path:
             try:
@@ -27,14 +32,13 @@ class UploadButton(CommonButton):
             progress_window = ProgressWindow(
                 master=AppContext.var("root").get_value(),
                 title="Parsing Text",
-                message=f"Parsing {file_name}\n\nLarge files may take some time.",
+                message=f'Parsing "{file_name}"\n\nLarge files may take some time.',
             )
             self.after(  # workaround for bug where CTKTopLevel drops itself in lift order
                 500,
                 func=lambda: progress_window.lift(AppContext.var("root").get_value()),
             )
 
-            AppContext.var("text_parser").set_value(text_parser)
             _async_parse_text(
                 text_parser,
                 start_page=3,
@@ -46,14 +50,17 @@ class UploadButton(CommonButton):
 
 def _async_parse_text(text_parser, start_page=None, end_page=None, callback=None):
     def job():
+        failed = False
         try:
             text_parser.parse_text(start_page, end_page)
-        except Exception:
+            AppContext.var("text_parser").set_value(text_parser)
+        except Exception as e:
+            failed = True
             AppContext.var("text_parser").set_value(None)
-            tk.messagebox.showwarning("Error", f"Unable to parse the selected file")
         finally:
             if callback:
                 callback()
+            if failed:
+                tk.messagebox.showwarning("Error", "Unable to parse the selected file")
 
-    thread = threading.Thread(target=job, daemon=True)
-    thread.start()
+    thread = threading.Thread(name="_async_parse_text", target=job, daemon=True).start()
