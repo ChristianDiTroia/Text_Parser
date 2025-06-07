@@ -13,6 +13,7 @@ class CommonOptionMenu(Ctk.CTkOptionMenu):
         fg_color=None,
         text_color=None,
         font=("Times New Roman", 16),
+        command=None,
     ):
         super().__init__(
             master=master,
@@ -24,4 +25,5 @@ class CommonOptionMenu(Ctk.CTkOptionMenu):
             fg_color=fg_color,
             text_color=text_color,
             font=font,
+            command=command,
         )

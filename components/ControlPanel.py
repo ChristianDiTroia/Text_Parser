@@ -1,3 +1,4 @@
+from components.GetTextButton import GetTextButton
 from components.SeedCheckbox import SeedCheckbox
 from components.SeedEntry import SeedEntry
 from components.TokenTypeMenu import TokenTypeMenu
@@ -16,9 +17,9 @@ class ControlPanel(CommonFrame):
 
         # Configure frame layout
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure((0, 1, 3, 4, 5, 7, 8, 9), weight=0)
+        self.grid_rowconfigure((0, 1, 3, 4, 5, 7, 8, 9, 10), weight=0)
         self.grid_rowconfigure((2), weight=1)
-        self.grid_rowconfigure((6), weight=1)
+        self.grid_rowconfigure((7), weight=1)
 
         # Upload button
         self.upload_button = UploadButton(self)
@@ -42,15 +43,19 @@ class ControlPanel(CommonFrame):
             row=5, column=0, padx=40, pady=(40, 0), sticky="ew"
         )
 
+        # Get text button
+        self.get_text_button = GetTextButton(self)
+        self.get_text_button.grid(row=6, column=0, padx=40, pady=(40, 0), sticky="ew")
+
         # Seed entry
         self.seed_entry = SeedEntry(self)
-        self.seed_entry.grid(row=7, column=0, padx=40, pady=(40, 0), sticky="ew")
+        self.seed_entry.grid(row=8, column=0, padx=40, pady=(40, 0), sticky="ew")
 
         self.random_seed_checkbox = SeedCheckbox(self)
         self.random_seed_checkbox.grid(
-            row=8, column=0, padx=40, pady=(40, 0), sticky="ew"
+            row=9, column=0, padx=40, pady=(40, 0), sticky="ew"
         )
 
         # Randomize button
         self.randomize_button = RandomizeButton(self)
-        self.randomize_button.grid(row=9, column=0, padx=40, pady=40, sticky="ew")
+        self.randomize_button.grid(row=10, column=0, padx=40, pady=40, sticky="ew")

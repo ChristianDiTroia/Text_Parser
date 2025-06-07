@@ -53,7 +53,7 @@ class TextParser:
                     )
                 )
         text = ""
-        for future in cf.as_completed(futures):
+        for future in futures:
             text += future.result()
 
         self.__lines = self.parse_lines(text)
@@ -93,11 +93,13 @@ class TextParser:
     def num_sentences(self) -> int:
         return len(self.__sentences)
 
-    def shuffle_lines(self, seed: int = None):
+    def shuffle_lines(self, seed: int | float | str | bytes | bytearray | None = None):
         random.seed(seed)
         random.shuffle(self.__lines)
 
-    def shuffle_sentences(self, seed: int = None):
+    def shuffle_sentences(
+        self, seed: int | float | str | bytes | bytearray | None = None
+    ):
         random.seed(seed)
         random.shuffle(self.__sentences)
 

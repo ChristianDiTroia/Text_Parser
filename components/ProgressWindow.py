@@ -5,7 +5,7 @@ class ProgressWindow(ctk.CTkToplevel):
     def __init__(self, master=None, title="Progress", message="Processing..."):
         super().__init__(master=master, takefocus=True)
         self.title(title)
-        self.geometry("500x200")
+        self.geometry("500x200")  # TODO - center the window
         self.resizable(False, False)
 
         self.grid_rowconfigure((0, 1), weight=1)

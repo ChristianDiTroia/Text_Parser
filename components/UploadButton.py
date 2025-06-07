@@ -9,9 +9,11 @@ from components.common.CommonButton import CommonButton
 
 class UploadButton(CommonButton):
     def __init__(self, master):
-        super().__init__(master, text="Upload", command=self._upload_dialogue)
+        super().__init__(master, text="Upload", command=self.__upload_dialogue)
 
-    def _upload_dialogue(self):
+    def __upload_dialogue(self):
+        self.configure(state="disabled")
+
         file_path = ctk.filedialog.askopenfilename(
             title="Select a file",
             filetypes=(
@@ -39,11 +41,17 @@ class UploadButton(CommonButton):
                 func=lambda: progress_window.lift(AppContext.var("root").get_value()),
             )
 
+            def cleanup():
+                self.configure(state="normal")
+                progress_window.destroy()
+
             _async_parse_text(
                 text_parser,
                 start_page=3,
-                callback=lambda: progress_window.destroy(),
+                callback=cleanup,
             )
+        else:
+            self.configure(state="normal")
 
             # TODO popup another window here asking for start page and end page,
 
@@ -63,4 +71,4 @@ def _async_parse_text(text_parser, start_page=None, end_page=None, callback=None
             if failed:
                 tk.messagebox.showwarning("Error", "Unable to parse the selected file")
 
-    thread = threading.Thread(name="_async_parse_text", target=job, daemon=True).start()
+    threading.Thread(name="_async_parse_text", target=job, daemon=True).start()
