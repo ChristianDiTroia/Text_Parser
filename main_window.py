@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from AppContext import AppContext
 from components.ControlPanel import ControlPanel
 from components.WorkspaceFrame import WorkspaceFrame
 
@@ -6,6 +7,9 @@ from components.WorkspaceFrame import WorkspaceFrame
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
+
+        # State management
+        AppContext.var("root").set_value(self)
 
         # Take focus of any widget when clicked
         self.bind_all("<Button-1>", lambda event: event.widget.focus_set())

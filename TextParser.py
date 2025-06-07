@@ -8,7 +8,7 @@ import os
 class TextParser:
 
     def __init__(self, file_path: str):
-        file_extension = re.split(r"\.", file_path)[-1].lower()
+        file_extension = file_path.split(r".")[-1].lower()
         if file_extension not in self.__ACCEPTED_FILE_TYPES:
             raise ValueError(
                 f"Unsupported file type: {file_extension}.\n"
