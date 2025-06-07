@@ -1,6 +1,7 @@
 import threading
 import customtkinter as ctk
 import tkinter as tk
+from PIL import Image
 from AppContext import AppContext
 from TextParser import TextParser
 from components.ProgressWindow import ProgressWindow
@@ -9,7 +10,18 @@ from components.common.CommonButton import CommonButton
 
 class UploadButton(CommonButton):
     def __init__(self, master):
-        super().__init__(master, text="Upload", command=self.__upload_dialogue)
+        self.upload_image = ctk.CTkImage(
+            Image.open("./icons/upload.png"), size=(64, 64)
+        )
+        super().__init__(
+            master,
+            text="",
+            command=self.__upload_dialogue,
+            image=self.upload_image,
+            fg_color="transparent",
+            width=64,
+            height=64,
+        )
 
     def __upload_dialogue(self):
         self.configure(state="disabled")

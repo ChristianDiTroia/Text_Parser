@@ -8,4 +8,20 @@
             <platform>Flaticon</platform>
         </source>
     </icon>
+    <icon name="upload.png">
+        <source>
+            <url>https://www.flaticon.com/free-icons/upload</url>
+            <title>upload icons</title>
+            <creator>Kiranshastry</creator>
+            <platform>Flaticon</platform>
+        </source>
+    </icon>
+        <icon name="save.png">
+        <source>
+            <url>"https://www.flaticon.com/free-icons/save</url>
+            <title>save icons</title>
+            <creator>Laisa Islam Ani</creator>
+            <platform>Flaticon</platform>
+        </source>
+    </icon>
 </credits>
