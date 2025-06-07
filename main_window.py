@@ -17,10 +17,10 @@ class App(ctk.CTk):
         # Take focus of any widget when clicked
         self.bind_all("<Button-1>", lambda event: event.widget.focus_set())
 
-        self.title("Poem Generator Beta")
+        self.title("Text Parser")
         self.geometry("1920x1080")
         self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=10)
+        self.grid_columnconfigure(1, weight=20)
         self.grid_rowconfigure(0, weight=1)
 
         # Workspace
@@ -35,10 +35,13 @@ class App(ctk.CTk):
 def auto_save_daemon(root: App):
     def job():
         while root.winfo_exists():
-            save_file = AppContext.var("save_file").get_value()
-            if save_file:
-                with open(save_file, "w") as file:
-                    file.write(AppContext.var("result_var").get_value())
+            file_path = AppContext.var("save_file").get_value()
+            if file_path:
+                try:
+                    with open(file_path, "w") as save_file:
+                        save_file.write(AppContext.var("result_var").get_value())
+                except Exception as e:
+                    print(f"Failed to save to file: {file_path}")
             time.sleep(1)  # auto save every second while the app is alive
 
     threading.Thread(name="auto_save_daemon", target=job, daemon=True).start()

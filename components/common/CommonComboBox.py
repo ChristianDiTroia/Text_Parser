@@ -7,7 +7,7 @@ class CommonComboBox(Ctk.CTkComboBox):
         self,
         master,
         values=["Default"],
-        width=200,
+        width=100,
         height=28,
         corner_radius=16,
         border_width=None,

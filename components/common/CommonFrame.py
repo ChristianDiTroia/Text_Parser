@@ -6,8 +6,8 @@ class CommonFrame(ctk.CTkFrame):
     def __init__(
         self,
         master,
-        width=200,
-        height=200,
+        width=0,
+        height=0,
         corner_radius=16,
         border_width=None,
         bg_color="transparent",

@@ -9,7 +9,7 @@ from components.common.CommonButton import CommonButton
 
 class UploadButton(CommonButton):
     def __init__(self, master):
-        super().__init__(master, text="Upload Text", command=self._upload_dialogue)
+        super().__init__(master, text="Upload", command=self._upload_dialogue)
 
     def _upload_dialogue(self):
         file_path = ctk.filedialog.askopenfilename(
@@ -34,7 +34,7 @@ class UploadButton(CommonButton):
                 title="Parsing Text",
                 message=f'Parsing "{file_name}"\n\nLarge files may take some time.',
             )
-            self.after(  # workaround for bug where CTKTopLevel drops itself in lift order
+            progress_window.after(  # workaround for bug where CTKTopLevel drops itself in lift order
                 500,
                 func=lambda: progress_window.lift(AppContext.var("root").get_value()),
             )
