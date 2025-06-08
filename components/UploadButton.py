@@ -11,7 +11,7 @@ from components.common.CommonButton import CommonButton
 class UploadButton(CommonButton):
     def __init__(self, master):
         self.upload_image = ctk.CTkImage(
-            Image.open("./icons/upload.png"), size=(64, 64)
+            Image.open("./icons/upload.png"), size=(48, 48)
         )
         super().__init__(
             master,
@@ -19,8 +19,8 @@ class UploadButton(CommonButton):
             command=self.__upload_dialogue,
             image=self.upload_image,
             fg_color="transparent",
-            width=64,
-            height=64,
+            width=48,
+            height=48,
         )
 
     def __upload_dialogue(self):

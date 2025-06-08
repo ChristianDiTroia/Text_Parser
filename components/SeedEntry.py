@@ -8,7 +8,7 @@ class SeedEntry(CommonEntry):
         super().__init__(
             master,
             placeholder_text="Seed",
-            width=100,
+            width=150,
             height=28,
         )
 

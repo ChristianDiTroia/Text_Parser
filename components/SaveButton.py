@@ -8,15 +8,15 @@ from components.common.CommonButton import CommonButton
 
 class SaveButton(CommonButton):
     def __init__(self, master):
-        self.save_image = ctk.CTkImage(Image.open("./icons/save.png"), size=(64, 64))
+        self.save_image = ctk.CTkImage(Image.open("./icons/save.png"), size=(48, 48))
         super().__init__(
             master,
             text="",
             command=_save_dialogue,
             image=self.save_image,
             fg_color="transparent",
-            width=64,
-            height=64,
+            width=32,
+            height=32,
         )
 
 

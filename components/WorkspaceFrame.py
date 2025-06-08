@@ -15,26 +15,25 @@ class WorkspaceFrame(CommonFrame):
         AppContext.var("text_var").add_callback(self.__update_text)
 
         # Configure frame layout
-        self.grid_columnconfigure((0, 2), weight=5)
-        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure((0, 1), weight=1)
         self.grid_rowconfigure(0, weight=1)
 
         # Left text box
         self.document_text = CommonTextbox(self, width=500)
-        self.document_text.grid(row=0, column=0, padx=(20, 0), pady=20, sticky="nsew")
+        self.document_text.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-        # Arrow image
-        self.right_arrow = ctk.CTkImage(
-            Image.open("./icons/right-arrow.png"), size=(64, 64)
-        )
-        self.right_arrow_label = ctk.CTkLabel(
-            self, image=self.right_arrow, width=128, height=128, text=""
-        )
-        self.right_arrow_label.grid(row=0, column=1, sticky="nsew")
+        # # Arrow image
+        # self.right_arrow = ctk.CTkImage(
+        #     Image.open("./icons/right-arrow.png"), size=(64, 64)
+        # )
+        # self.right_arrow_label = ctk.CTkLabel(
+        #     self, image=self.right_arrow, width=128, height=128, text=""
+        # )
+        # self.right_arrow_label.grid(row=0, column=1, sticky="nsew")
 
         # Right text box
         self.result_text = CommonTextbox(self, width=500)
-        self.result_text.grid(row=0, column=2, padx=(0, 20), pady=20, sticky="nsew")
+        self.result_text.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
         self.result_text.bind("<KeyRelease>", command=self.__save_result)
 
     def __update_text(self, value):

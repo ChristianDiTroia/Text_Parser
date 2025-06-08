@@ -21,16 +21,16 @@ class App(ctk.CTk):
         self.title("Text Parser")
         self.geometry("1920x1080")
         self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=20)
         self.grid_rowconfigure(0, weight=1)
-
-        # Workspace
-        self.workspace = WorkspaceFrame(self)
-        self.workspace.grid(row=0, column=1, padx=(20, 40), pady=40, sticky="nsew")
+        self.grid_rowconfigure(1, weight=20)
 
         # Control Panel
         self.control_panel = ControlPanel(self)
-        self.control_panel.grid(row=0, column=0, padx=(40, 20), pady=40, sticky="nsew")
+        self.control_panel.grid(row=0, column=0, pady=(0, 10), sticky="nsew")
+
+        # Workspace
+        self.workspace = WorkspaceFrame(self)
+        self.workspace.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nsew")
 
     def mainloop(self, *args, **kwargs):
         self.auto_save.start()
