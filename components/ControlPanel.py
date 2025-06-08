@@ -21,11 +21,10 @@ class ControlPanel(CommonFrame):
         self.grid_rowconfigure((1), weight=1)
         self.grid_rowconfigure((6), weight=1)
 
-        # Upload button
+        # IO upload and save buttons
         self.upload_button = UploadButton(self)
         self.upload_button.grid(row=0, column=0, padx=0, pady=(40, 0))
 
-        # Save button
         self.save_button = SaveButton(self)
         self.save_button.grid(row=0, column=1, padx=0, pady=(40, 0))
 
@@ -54,13 +53,13 @@ class ControlPanel(CommonFrame):
         )
 
         # Seed entry
-        self.seed_entry = SeedEntry(self)
-        self.seed_entry.grid(
+        self.random_seed_checkbox = SeedCheckbox(self)
+        self.random_seed_checkbox.grid(
             row=7, column=0, padx=20, pady=(40, 0), sticky="ew", columnspan=2
         )
 
-        self.random_seed_checkbox = SeedCheckbox(self)
-        self.random_seed_checkbox.grid(
+        self.seed_entry = SeedEntry(self)
+        self.seed_entry.grid(
             row=8, column=0, padx=20, pady=(40, 0), sticky="ew", columnspan=2
         )
 

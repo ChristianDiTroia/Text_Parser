@@ -1,6 +1,7 @@
+import random
+import sys
 from AppContext import AppContext
 from components.common.CommonButton import CommonButton
-from components.TokenTypeMenu import TokenType
 
 
 class RandomizeButton(CommonButton):
@@ -9,14 +10,13 @@ class RandomizeButton(CommonButton):
         self.configure(command=self._randomize)
 
     def _randomize(self):
+        use_random_seed = AppContext.var("use_random_seed").get_value()
         seed = AppContext.var("seed").get_value()
-        token_type = AppContext.var("token_type").get_value()
         text_parser = AppContext.var("text_parser").get_value()
 
-        match token_type:
-            case TokenType.SENTENCE:
-                text_parser.shuffle_sentences(seed)
-            case TokenType.LINE:
-                text_parser.shuffle_lines(seed)
-            case _:
-                raise ValueError(f"Incorrect token type recieved: {token_type}")
+        if use_random_seed or not seed:
+            seed = str(random.randint(-sys.maxsize - 1, sys.maxsize))
+            AppContext.var("seed").set_value(seed)
+
+        text_parser.shuffle_sentences(seed)
+        text_parser.shuffle_lines(seed)
