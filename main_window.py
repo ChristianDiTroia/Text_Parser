@@ -3,7 +3,7 @@ import threading
 import time
 from AppContext import AppContext
 from components.ControlPanel import ControlPanel
-from components.SaveButton import _save_dialogue
+from components.SaveButton import _save_dialogue, save_file
 from components.WorkspaceFrame import WorkspaceFrame
 
 
@@ -44,8 +44,7 @@ def create_auto_save_daemon(root: App):
             file_path = AppContext.var("save_file").get_value()
             if file_path:
                 try:
-                    with open(file_path, "w", encoding="utf-8") as save_file:
-                        save_file.write(AppContext.var("result_var").get_value())
+                    save_file(file_path)
                 except Exception as e:
                     print(f"Failed to save to file: {file_path}")
             time.sleep(1)  # auto save every second while the app is alive
