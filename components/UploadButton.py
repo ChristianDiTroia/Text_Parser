@@ -57,9 +57,8 @@ class UploadButton(CommonButton):
                 self.configure(state="normal")
                 progress_window.destroy()
 
-            _async_parse_text(
+            async_parse_text(
                 text_parser,
-                start_page=3,
                 callback=cleanup,
             )
         else:
@@ -68,7 +67,7 @@ class UploadButton(CommonButton):
             # TODO popup another window here asking for start page and end page,
 
 
-def _async_parse_text(text_parser, start_page=None, end_page=None, callback=None):
+def async_parse_text(text_parser, start_page=None, end_page=None, callback=None):
     def job():
         failed = False
         try:

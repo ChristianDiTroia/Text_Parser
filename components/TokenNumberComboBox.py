@@ -19,7 +19,7 @@ class TokenNumberComboBox(CommonComboBox):
     def __set_token_number(self):
         try:
             token_num = int(self._value)
-        except:
+        except Exception:
             token_num = self.cget("values")[0]
         AppContext.var("token_number").set_value(token_num)
 

@@ -3,13 +3,14 @@ import threading
 import time
 from AppContext import AppContext
 from components.ControlPanel import ControlPanel
+from components.SaveButton import _save_dialogue
 from components.WorkspaceFrame import WorkspaceFrame
 
 
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
-        auto_save_daemon(self)
+        self.auto_save: threading.Thread = create_auto_save_daemon(self)
 
         # State management
         AppContext.var("root").set_value(self)
@@ -31,22 +32,36 @@ class App(ctk.CTk):
         self.control_panel = ControlPanel(self)
         self.control_panel.grid(row=0, column=0, padx=(40, 20), pady=40, sticky="nsew")
 
+    def mainloop(self, *args, **kwargs):
+        self.auto_save.start()
+        super().mainloop(*args, **kwargs)
 
-def auto_save_daemon(root: App):
+
+def create_auto_save_daemon(root: App):
     def job():
-        while root.winfo_exists():
+        app_alive = root.winfo_exists()
+        while app_alive:
             file_path = AppContext.var("save_file").get_value()
             if file_path:
                 try:
-                    with open(file_path, "w") as save_file:
+                    with open(file_path, "w", encoding="utf-8") as save_file:
                         save_file.write(AppContext.var("result_var").get_value())
                 except Exception as e:
                     print(f"Failed to save to file: {file_path}")
             time.sleep(1)  # auto save every second while the app is alive
+            try:
+                app_alive = root.winfo_exists()
+            except Exception:  # calling root raises exception if main loop exited
+                app_alive = False
 
-    threading.Thread(name="auto_save_daemon", target=job, daemon=True).start()
+    return threading.Thread(name="auto_save_daemon", target=job, daemon=True)
 
 
 if __name__ == "__main__":
     app = App()
     app.mainloop()
+
+    file_path = AppContext.var("save_file").get_value()
+    result_text = AppContext.var("result_var").get_value()
+    if not file_path and result_text and result_text.strip():
+        _save_dialogue()  # ask to save any unsaved changes when app closes

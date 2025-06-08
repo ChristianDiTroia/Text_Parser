@@ -7,7 +7,7 @@ class TokenTypeMenu(CommonOptionMenu):
     def __init__(self, master):
         super().__init__(
             master,
-            values=[TokenType.SENTENCE, TokenType.LINE],
+            values=[TokenType.LINE, TokenType.SENTENCE],
             width=125,
             command=self.__set_token_type,
         )
