@@ -67,7 +67,7 @@ class UploadButton(CommonButton):
             # TODO popup another window here asking for start page and end page,
 
 
-def async_parse_text(text_parser, start_page=None, end_page=None, callback=None):
+def async_parse_text(text_parser, start_page=1, end_page=None, callback=None):
     def job():
         failed = False
         try:
@@ -76,6 +76,7 @@ def async_parse_text(text_parser, start_page=None, end_page=None, callback=None)
         except Exception as e:
             failed = True
             AppContext.var("text_parser").set_value(None)
+            print(e)
         finally:
             if callback:
                 callback()

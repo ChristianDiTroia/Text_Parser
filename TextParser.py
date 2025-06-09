@@ -41,6 +41,8 @@ class TextParser:
             if not end_page:
                 with pdfplumber.open(self.__text_bytes) as pdf:
                     end_page = len(pdf.pages)
+            if not start_page:
+                start_page = 1
 
             workers = os.cpu_count() or 4
             pages_per_worker = math.ceil((end_page - start_page) / workers)
