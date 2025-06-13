@@ -4,7 +4,6 @@ from components.SeedCheckbox import SeedCheckbox
 from components.SeedEntry import SeedEntry
 from components.TokenTypeMenu import TokenTypeMenu
 from components.RandomizeButton import RandomizeButton
-from components.ControlSwitch import ControlSwitch
 from components.common.CommonFrame import CommonFrame
 from components.SaveButton import SaveButton
 from components.UploadButton import UploadButton

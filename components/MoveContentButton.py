@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from PIL import Image
+from AppContext import AppContext
 from components.common.CommonButton import CommonButton
 
 
@@ -11,9 +12,16 @@ class MoveContentButton(CommonButton):
         super().__init__(
             master,
             text="",
-            command=None,
+            command=self._move_text,
             image=self.right_arrow,
             fg_color="transparent",
             width=48,
             height=48,
         )
+
+    def _move_text(self):
+        document_text = AppContext.var("text_var").get_value()
+        current_result = AppContext.var("result_var").get_value()
+        if document_text:
+            AppContext.var("result_var").set_value(str(current_result) + str(document_text))
+        
