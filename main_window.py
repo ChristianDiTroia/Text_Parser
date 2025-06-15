@@ -46,6 +46,8 @@ class App(ctk.CTk):
         if value:
             if isinstance(value, str):
                 self.progress_bar.set_message(value)
+            else:
+                self.progress_bar.set_message("")
             self.progress_bar.grid(row=2, column=0, padx=10, pady=(0, 5), sticky="nse")
         else:
             self.progress_bar.grid_forget()
