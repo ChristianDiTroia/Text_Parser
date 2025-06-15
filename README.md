@@ -1,0 +1,29 @@
+# Text Parser
+### Text Parser is a python GUI app built to parse and read text from files.
+
+## Usage
+- upload any .txt, .docx, or .pdf file containing text to parse its sentences and lines
+- parsed tokens can be randomized with a provided or random seed
+- get any given number of parsed tokens from the uploaded file in the left text box, then edit and save the result in the right text box
+  
+![Screenshot 2025-06-15 162329](https://github.com/user-attachments/assets/bc0ac2d3-5a55-447a-b9cb-a1a43273ff41)
+
+## Dependencies
+- Python version >= 3.13
+- customtkinter
+- tkinter
+- pillow
+- pdfplumber
+- python-docx
+- pyinstaller
+
+## Icon credits
+
+### right-arrow.png
+https://www.flaticon.com/free-icons/arrow
+
+### upload.png
+https://www.flaticon.com/free-icons/upload
+
+### save.png
+https://www.flaticon.com/free-icons/save
