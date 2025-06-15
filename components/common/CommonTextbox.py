@@ -18,7 +18,7 @@ class CommonTextbox(ctk.CTkTextbox):
         text_color: str | None = None,
         scrollbar_button_color: str | Tuple[str, str] | None = None,
         scrollbar_button_hover_color: str | Tuple[str, str] | None = None,
-        font: tuple | CTkFont | None = ("Times New Roman", 20),
+        font: tuple | CTkFont | None = ("Times New Roman", 16),
         activate_scrollbars: bool = True,
         undo=True,
         autoseparators=True,
