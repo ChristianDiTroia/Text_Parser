@@ -15,8 +15,8 @@ class SaveButton(CommonButton):
             command=_save_dialogue,
             image=self.save_image,
             fg_color="transparent",
-            width=32,
-            height=32,
+            width=48,
+            height=48,
         )
 
 

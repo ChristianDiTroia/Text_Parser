@@ -21,12 +21,12 @@ class WorkspaceFrame(CommonFrame):
 
         # Left text box
         self.document_text = CommonTextbox(self, width=500)
-        self.document_text.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.document_text.grid(row=0, column=0, padx=(10, 5), pady=10, sticky="nsew")
         self.document_text.bind("<<Modified>>", command=self.__save_text)
 
         # Right text box
         self.result_text = CommonTextbox(self, width=500)
-        self.result_text.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+        self.result_text.grid(row=0, column=1, padx=(5, 10), pady=10, sticky="nsew")
         self.result_text.bind("<<Modified>>", command=self.__save_result)
 
     def __update_text(self, value):

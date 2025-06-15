@@ -23,15 +23,15 @@ class App(ctk.CTk):
         self.geometry("1920x1080")
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=20)
+        self.grid_rowconfigure(1, weight=150)
 
         # Control Panel
         self.control_panel = ControlPanel(self)
-        self.control_panel.grid(row=0, column=0, pady=(0, 10), sticky="nsew")
+        self.control_panel.grid(row=0, column=0, pady=0, sticky="new")
 
         # Workspace
         self.workspace = WorkspaceFrame(self)
-        self.workspace.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nsew")
+        self.workspace.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
 
     def mainloop(self, *args, **kwargs):
         self.auto_save.start()
