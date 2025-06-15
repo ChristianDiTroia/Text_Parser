@@ -20,7 +20,7 @@ class CommonButton(ctk.CTkButton):
         round_width_to_even_numbers=True,
         round_height_to_even_numbers=True,
         text="Common Button",
-        font=("Times New Roman", 20),
+        font=("Times New Roman", 16),
         textvariable=None,
         image=None,
         state="normal",

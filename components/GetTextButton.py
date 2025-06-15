@@ -5,7 +5,7 @@ from components.common.CommonButton import CommonButton
 
 class GetTextButton(CommonButton):
     def __init__(self, master):
-        super().__init__(master, text="Get text")
+        super().__init__(master, text="Get Text")
         self.configure(command=self._display_text)
 
     def _display_text(self):
