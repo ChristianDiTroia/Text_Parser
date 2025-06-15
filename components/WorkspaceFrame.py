@@ -50,14 +50,12 @@ class WorkspaceFrame(CommonFrame):
             self.result_text.mark_set(tk.INSERT, "end")
 
     def __save_text(self, event):
-        print("save text")
         if self.document_text.edit_modified():
             text = self.document_text.get(1.0, tk.END).removesuffix("\n")
             AppContext.var("text_var").set_value(text)
             self.document_text.edit_modified(False)
 
     def __save_result(self, event):
-        print("save result")
         if self.result_text.edit_modified():
             text = self.result_text.get(1.0, tk.END).removesuffix("\n")
             AppContext.var("result_var").set_value(text)

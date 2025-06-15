@@ -27,4 +27,3 @@ class MoveContentButton(CommonButton):
         if document_text and current_result:
             document_text = "\n" + document_text
         AppContext.var("result_var").set_value(current_result + document_text)
-        print("moved")
