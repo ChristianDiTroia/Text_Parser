@@ -8,7 +8,8 @@ from components.common.CommonButton import CommonButton
 
 class SaveButton(CommonButton):
     def __init__(self, master):
-        self.save_image = ctk.CTkImage(Image.open("./icons/save.png"), size=(48, 48))
+        working_dir = AppContext.var("working_dir").get_value()
+        self.save_image = ctk.CTkImage(Image.open(working_dir / "./icons/save.png"), size=(48, 48))
         super().__init__(
             master,
             text="",

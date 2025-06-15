@@ -1,3 +1,5 @@
+import sys
+from pathlib import Path
 import multiprocessing
 import customtkinter as ctk
 import threading
@@ -81,6 +83,12 @@ def cleanup():
 
 
 if __name__ == "__main__":
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        bundle_dir = Path(sys._MEIPASS)
+    else:
+        bundle_dir = Path(__file__).parent
+    AppContext.var("working_dir").set_value(bundle_dir)
+
     multiprocessing.freeze_support()  # required for pyinstaller on Windows
     atexit.register(cleanup)
 

@@ -10,8 +10,9 @@ from components.common.CommonButton import CommonButton
 
 class UploadButton(CommonButton):
     def __init__(self, master):
+        working_dir = AppContext.var("working_dir").get_value()
         self.upload_image = ctk.CTkImage(
-            Image.open("./icons/upload.png"), size=(48, 48)
+            Image.open(working_dir / "./icons/upload.png"), size=(48, 48)
         )
         super().__init__(
             master,

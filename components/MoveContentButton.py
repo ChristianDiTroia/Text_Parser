@@ -6,8 +6,9 @@ from components.common.CommonButton import CommonButton
 
 class MoveContentButton(CommonButton):
     def __init__(self, master):
+        working_dir = AppContext.var("working_dir").get_value()
         self.right_arrow = ctk.CTkImage(
-            Image.open("./icons/right-arrow.png"), size=(48, 48)
+            Image.open(working_dir / "./icons/right-arrow.png"), size=(48, 48)
         )
         super().__init__(
             master,
