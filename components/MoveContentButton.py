@@ -22,6 +22,9 @@ class MoveContentButton(CommonButton):
     def _move_text(self):
         document_text = AppContext.var("text_var").get_value()
         current_result = AppContext.var("result_var").get_value()
-        if document_text:
-            AppContext.var("result_var").set_value(str(current_result) + str(document_text))
-        
+        document_text = str(document_text) if document_text else ""
+        current_result = str(current_result) if current_result else ""
+        if document_text and current_result:
+            document_text = "\n" + document_text
+        AppContext.var("result_var").set_value(current_result + document_text)
+        print("moved")

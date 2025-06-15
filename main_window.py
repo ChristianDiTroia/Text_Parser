@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import threading
 import time
+import atexit
 from AppContext import AppContext
 from components.ControlPanel import ControlPanel
 from components.SaveButton import _save_dialogue, save_file
@@ -56,11 +57,15 @@ def create_auto_save_daemon(root: App):
     return threading.Thread(name="auto_save_daemon", target=job, daemon=True)
 
 
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()
-
+def cleanup():
     file_path = AppContext.var("save_file").get_value()
     result_text = AppContext.var("result_var").get_value()
     if not file_path and result_text and result_text.strip():
         _save_dialogue()  # ask to save any unsaved changes when app closes
+
+
+if __name__ == "__main__":
+    atexit.register(cleanup)
+
+    app = App()
+    app.mainloop()
