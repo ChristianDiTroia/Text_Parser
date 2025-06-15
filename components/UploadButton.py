@@ -43,19 +43,11 @@ class UploadButton(CommonButton):
                 return
 
             file_name = file_path.split(r"/")[-1]
-            progress_window = ProgressWindow(
-                master=AppContext.var("root").get_value(),
-                title="Parsing Text",
-                message=f'Parsing "{file_name}"\n\nLarge files may take some time.',
-            )
-            progress_window.after(  # workaround for bug where CTKTopLevel drops itself in lift order
-                500,
-                func=lambda: progress_window.lift(AppContext.var("root").get_value()),
-            )
+            AppContext.var("loading").set_value(f'Parsing "{file_name}"...')
 
             def cleanup():
                 self.configure(state="normal")
-                progress_window.destroy()
+                AppContext.var("loading").set_value("")
 
             async_parse_text(
                 text_parser,

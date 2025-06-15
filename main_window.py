@@ -3,6 +3,7 @@ import threading
 import time
 import atexit
 from AppContext import AppContext
+from components.ProgressWindow import ProgressWindow
 from components.ControlPanel import ControlPanel
 from components.SaveButton import _save_dialogue, save_file
 from components.WorkspaceFrame import WorkspaceFrame
@@ -15,6 +16,7 @@ class App(ctk.CTk):
 
         # State management
         AppContext.var("root").set_value(self)
+        AppContext.var("loading").add_callback(self.set_loading)
 
         # Take focus of any widget when clicked
         self.bind_all("<Button-1>", lambda event: event.widget.focus_set())
@@ -33,9 +35,20 @@ class App(ctk.CTk):
         self.workspace = WorkspaceFrame(self)
         self.workspace.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
 
+        # Progress bar
+        self.progress_bar = ProgressWindow(self)
+
     def mainloop(self, *args, **kwargs):
         self.auto_save.start()
         super().mainloop(*args, **kwargs)
+
+    def set_loading(self, value):
+        if value:
+            if isinstance(value, str):
+                self.progress_bar.set_message(value)
+            self.progress_bar.grid(row=2, column=0, padx=10, pady=(0, 5), sticky="nse")
+        else:
+            self.progress_bar.grid_forget()
 
 
 def create_auto_save_daemon(root: App):
