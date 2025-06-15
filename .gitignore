@@ -1,7 +1,12 @@
-#VSCode stuff
+# VSCode stuff
 .vscode
 
 # python stuff
 .venv
 __pycache__/
 *.pyc
+
+# pyinstaller stuff
+build
+dist
+*.spec

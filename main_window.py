@@ -1,3 +1,4 @@
+import multiprocessing
 import customtkinter as ctk
 import threading
 import time
@@ -80,6 +81,7 @@ def cleanup():
 
 
 if __name__ == "__main__":
+    multiprocessing.freeze_support()  # required for pyinstaller on Windows
     atexit.register(cleanup)
 
     app = App()
