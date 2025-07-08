@@ -1,5 +1,5 @@
 # Text Parser
-### Text Parser is a python GUI app built to parse and read text from files.
+### Text Parser is a python GUI app built to parse text into lines and sentences from various file types. Additionally, parsed text can be randomized using a signed integer seed.
 
 ## Usage
 - upload any .txt, .docx, or .pdf file containing text to parse its sentences and lines
